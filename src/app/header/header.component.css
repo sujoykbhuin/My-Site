@@ -1,0 +1,41 @@
+.header {
+    overflow: hidden;
+    background-color:cornflowerblue;
+    padding: 6px;
+  }
+  .header a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px; 
+    line-height: 10px;
+    border-radius: 2px;
+  }
+  .header a.logo {
+    font-size: 25px;
+    font-weight: bold;
+    border-left: 20px;
+  }
+  .header-right {
+  margin-left: 290px;
+  }
+
+.container{font-family: 'Courier New', Courier, monospace;
+  color:black;
+  background-color:navajowhite;
+  font-size: 20px;
+  
+}
+.header table table-hover{font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+i{
+  cursor: pointer
+}
+
+  
