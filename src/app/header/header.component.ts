@@ -10,16 +10,22 @@ export class HeaderComponent implements OnInit {
 
   tableeditValue: any;
   dontShowSubmit = false;
-  table2:any[] =[];
+  table2 =[];
   showTable = false;
   firstname ;lastname ;email ;phone  ; date ; password;
   @ViewChild('testForm') testForm:NgForm;
   constructor() { }
 
   ngOnInit() {
-  this.table2 =[];
-    
-  this.table2  = JSON.parse(localStorage.getItem('table'));
+    const valueFormlocal = JSON.parse(localStorage.getItem('table'))
+    console.log(valueFormlocal)
+    if(valueFormlocal !== null){
+      this.table2  =valueFormlocal;
+      
+    }else{
+      this.table2=[]
+
+    }
   
   }
 
