@@ -1,99 +1,142 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild, forwardRef } from '@angular/core';
+import { NgForm, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: forwardRef(() => HeaderComponent),
+    }
+  ]
 })
 export class HeaderComponent implements OnInit {
 
   tableeditValue: any;
   dontShowSubmit = false;
-  table2 =[];
+  public loading = false;
+  table2;
   showTable = false;
-  firstname ;lastname ;email ;phone  ; date ; password;
-  @ViewChild('testForm') testForm:NgForm;
-  constructor() { }
+  FirstName; LastName; Email; PhoneNumber; date; password; MiddleName; Gender; Nationality; PlaceName; PinCode; Address;
+  @ViewChild('testForm') testForm: NgForm;
+  bookingId: any;
+  constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-    const valueFormlocal = JSON.parse(localStorage.getItem('table'))
-    console.log(valueFormlocal)
-    if(valueFormlocal !== null){
-      this.table2  =valueFormlocal;
-      
-    }else{
-      this.table2=[]
+    // const valueFormlocal = JSON.parse(localStorage.getItem('table'))
+    // 
+    // if (valueFormlocal !== null) {
+    //   this.table2 = valueFormlocal;
 
+    // } else {
+    //   this.table2 = [];
+
+    // }
+    this.fetchTraveler();
+
+  }
+
+  update(tables) {
+    console.log(tables)
+
+    if (tables.valid) {
+      this.apiService.updateTravellers(this.bookingId, tables.value).toPromise()
+        .then(data => {
+          this.fetchTraveler();
+          this.showTable = !this.showTable;
+        })
+    } else {
+      alert('Please Fill correct data');
     }
-  
-  }
-
-  getFromData =(value)=>{
-     let tableValue = value.value;
-     console.log(tableValue);
-     
-     if(this.dontShowSubmit){
-      this.table2.forEach((data,i)=>{
-        if(this.tableeditValue.phone === data.phone){
-          this.table2.splice(i,1);
-        }
-      })
-      alert('Updated Successfully');
-      
-     }else{
-      alert('Registration successful');
-
-     }
-     this.table2.push(tableValue);
-     console.log(this.table2)
-     window.localStorage.setItem('table',JSON.stringify(this.table2));
-     this.showTableChnage();
-  }
-
-  submit(){
 
   }
-  editData(table){
-    console.log(this.table2);
+
+  fetchTraveler = () => {
+    this.loading = true;
+    this.apiService.fetchTravellers().subscribe(
+      data => {
+        this.loading = false;
+        this.table2 = data;
+
+      },
+      err => this.handleError(err)
+    );
+
+
+  }
+
+
+  editData(table) {
+
     this.tableeditValue = table;
+    this.bookingId = table.BookingTravellerId;
     this.dontShowSubmit = true;
-    this.firstname = table.firstname;
-    this.lastname = table.lastname;
-    this.phone = table.phone;
-    this.email = table.email;
-    this.date = table.date;
-    this.password = table.password;
+    this.FirstName = table.FirstName;
+    this.MiddleName = table.MiddleName;
+    this.LastName = table.LastName;
+    this.Gender = table.Gender;
+    this.PhoneNumber = table.PhoneNumber;
+    this.Email = table.Email;
+    this.PinCode = table.PinCode;
+    this.Nationality = table.Nationality;
+    this.Address = table.Address;
+    this.PlaceName = table.PlaceName;
     this.showTable = !this.showTable;
-    
-    
   }
+
+
 
   /**
    * @description this method is use to delete the selected row 
    * @param editValue 
    */
-deleteTable(table){
-  const confirms = confirm('are you sure you want to delete this row?');
-    if(confirms){
-      this.table2.forEach((data,i)=>{
-        if(table.phone === data.phone){
-          this.table2.splice(i,1);
-        }
-      })
-      window.localStorage.setItem('table', JSON.stringify(this.table2));
+  deleteTable(table) {
+    const confirms = confirm('are you sure you want to delete this row?');
+    if (confirms) {
+      this.apiService.deleteTraveller(table.BookingTravellerId).subscribe(data => {
+
+        this.fetchTraveler();
+      });
       alert('Deleted Successfully');
-    }else{
+    } else {
       return;
     }
-   
-}
-  showTableChnage(){
-    this.showTable=!this.showTable;
+
+  }
+  showTableChnage() {
+    this.showTable = !this.showTable;
     this.testForm.reset();
   }
-  flipForm(){
-    this.dontShowSubmit =false;
+  flipForm() {
+    this.dontShowSubmit = false;
     this.showTable = !this.showTable;
+    this.fetchTraveler();
+  }
+
+
+  handleError = (error: Error | HttpErrorResponse) => {
+    if (error instanceof HttpErrorResponse) {
+      if (!navigator.onLine) {
+        alert('you are offline');
+      } else {
+        alert('server error came');
+      }
+    } else {
+      alert('client error came');
+
+    }
+  }
+  createTravellers = (user) => {
+    this.apiService.createTraveller(user.value).toPromise()
+      .then(data => {
+
+        this.flipForm();
+      });
+
   }
 }
