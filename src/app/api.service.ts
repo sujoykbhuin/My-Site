@@ -14,7 +14,7 @@ export class ApiService {
    */
   fetchTravellers = () => {
     console.log('fetch')
-    return this.httpClient.get('http://zingotesting.azurewebsites.net/api/Travellers');
+    return this.httpClient.get('https://zingotesting.azurewebsites.net/api/Travellers');
   }
 
   createTraveller = (user) => {
@@ -30,11 +30,11 @@ export class ApiService {
       'PlaceName': user.PlaceName,
       'Nationality': user.Nationality,
     }
-    return this.httpClient.post('http://zingotesting.azurewebsites.net/api/Travellers', users);
+    return this.httpClient.post('https://zingotesting.azurewebsites.net/api/Travellers', users);
   }
 
   deleteTraveller = (BookingTravellerId) => {
-    return this.httpClient.delete(`http://zingotesting.azurewebsites.net/api/Travellers/${BookingTravellerId}`)
+    return this.httpClient.delete(`https://zingotesting.azurewebsites.net/api/Travellers/${BookingTravellerId}`)
   }
 
   updateTravellers = (BookingTravellerId, user) => {
