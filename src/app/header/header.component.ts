@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
   }
 
   update(tables) {
-    console.log(tables)
+
 
     if (tables.valid) {
       this.apiService.updateTravellers(this.bookingId, tables.value).toPromise()
@@ -62,6 +62,7 @@ export class HeaderComponent implements OnInit {
       data => {
         this.loading = false;
         this.table2 = data;
+
 
       },
       err => this.handleError(err)
