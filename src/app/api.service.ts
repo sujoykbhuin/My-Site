@@ -51,7 +51,7 @@ export class ApiService {
       'PlaceName': user.PlaceName,
       'Nationality': user.Nationality,
     }
-    return this.httpClient.put(`http://zingotesting.azurewebsites.net/api/Travellers/${BookingTravellerId}`, users)
+    return this.httpClient.put(`https://zingotesting.azurewebsites.net/api/Travellers/${BookingTravellerId}`, users)
   }
 
 }
